@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Introdução de espécies</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap">
+<style>
+:root{--bg:#e8f0e4;--fg:#142a22;--card:#fbfdf9;--ac:#1d6b52;--bad:#b8225f;--mut:#51655b;--line:#c3d3c4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1b22;--fg:#e6f2ec;--card:#16282f;--ac:#6fd3ae;--bad:#ff7aa8;--mut:#9db5ab;--line:#28404a}}
+:root[data-theme="dark"]{--bg:#0e1b22;--fg:#e6f2ec;--card:#16282f;--ac:#6fd3ae;--bad:#ff7aa8;--mut:#9db5ab;--line:#28404a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font:17px/1.55 Figtree,system-ui,sans-serif;display:flex;flex-direction:column}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;line-height:1.1;margin:0 0 .5em}
+h1{font-size:clamp(2.4rem,9vw,4.6rem);font-weight:800}
+h2{font-size:clamp(1.7rem,5.5vw,2.6rem);font-weight:800}
+h3{font-size:1.15rem;font-weight:600;margin-bottom:.3em}
+p{margin:0 0 .8em}
+.bar{height:5px;background:var(--line)}.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .4s}
+.deck{flex:1;position:relative;min-height:0}
+.s{position:absolute;inset:0;overflow-y:auto;padding:26px 20px 32px;display:none}
+.s.on{display:block}
+.s.on .w>*{animation:up .6s both}
+.s.on .w>*:nth-child(2){animation-delay:.1s}.s.on .w>*:nth-child(3){animation-delay:.2s}.s.on .w>*:nth-child(4){animation-delay:.3s}.s.on .w>*:nth-child(5){animation-delay:.4s}.s.on .w>*:nth-child(6){animation-delay:.5s}
+.s.on .grid>*{animation:pop .55s both}
+.s.on .grid>*:nth-child(1){animation-delay:.25s}.s.on .grid>*:nth-child(2){animation-delay:.4s}.s.on .grid>*:nth-child(3){animation-delay:.55s}.s.on .grid>*:nth-child(4){animation-delay:.7s}
+.s.on .tl div{animation:sl .6s both}
+.s.on .tl div:nth-child(1){animation-delay:.3s}.s.on .tl div:nth-child(2){animation-delay:.9s}.s.on .tl div:nth-child(3){animation-delay:1.5s}.s.on .tl div:nth-child(4){animation-delay:2.1s}
+.card .em{display:inline-block;animation:pl 3.2s ease-in-out infinite}
+.fc.on .b{animation:pop .35s}
+.sim i.x{animation:ping .5s}
+.opt{animation:up .4s both}.opt.ok{animation:pop .4s}.opt.no{animation:shake .4s}
+.meter i{box-shadow:0 0 0 2px var(--card) inset}
+button{transition:transform .15s}button:active{transform:scale(.95)}
+@keyframes up{from{opacity:0;transform:translateY(22px)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}}
+@keyframes sl{from{opacity:0;transform:translateX(-26px)}}
+@keyframes pl{50%{transform:scale(1.12) rotate(-5deg)}}
+@keyframes ping{40%{transform:scale(1.4)}}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.w{max-width:920px;margin:0 auto}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin:16px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card.k{border-left:6px solid var(--ac)}.card.r{border-left:6px solid var(--bad)}
+.em{font-size:2.4rem;line-height:1}
+.mut{color:var(--mut)}
+.hero{min-height:100%;display:flex;flex-direction:column;justify-content:center}
+.float{font-size:2.6rem;display:flex;gap:18px;flex-wrap:wrap;margin-top:18px}
+.float span{animation:b 3s ease-in-out infinite}.float span:nth-child(2){animation-delay:.4s}.float span:nth-child(3){animation-delay:.8s}.float span:nth-child(4){animation-delay:1.2s}.float span:nth-child(5){animation-delay:1.6s}
+@keyframes b{50%{transform:translateY(-12px)}}
+.tl{border-left:3px solid var(--bad);margin:14px 0 0 8px;padding-left:18px}
+.tl div{margin-bottom:14px}.tl b{color:var(--bad)}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:10px 16px}
+button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.pri{background:var(--ac);color:var(--bg);border-color:var(--ac);font-weight:600}
+.sim{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;max-width:420px;margin:14px 0}
+.sim i{aspect-ratio:1;border-radius:5px;background:var(--ac);opacity:.75;transition:background .4s,opacity .4s}
+.sim i.x{background:var(--bad);opacity:1}
+.meter{height:14px;border-radius:7px;background:var(--bad);overflow:hidden;max-width:420px}.meter i{display:block;height:100%;background:var(--ac);width:100%;transition:width .4s}
+.fc{text-align:left;min-height:150px;width:100%}
+.fc .b{display:none;font-size:.93rem;line-height:1.4}.fc.on .b{display:block}.fc.on .f{display:none}
+.fc .f b{display:block;font-size:1.05rem;margin:6px 0 2px}.fc .f small{color:var(--mut)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0}
+.opt.ok{background:var(--ac);color:var(--bg);border-color:var(--ac)}.opt.no{background:var(--bad);color:#fff;border-color:var(--bad)}
+.ex{margin:12px 0;font-size:.95rem}
+nav{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-top:1px solid var(--line);background:var(--card)}
+nav span{font-size:.9rem;color:var(--mut)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar"><i id="pg"></i></div>
+<main class="deck">
+
+<section class="s on"><div class="w hero">
+<h1>Introdução de espécies</h1>
+<p style="font-size:1.25rem" class="mut">Quando um ser vivo muda de endereço, o ecossistema inteiro sente.</p>
+<div class="float"><span>🦟</span><span>🐌</span><span>🐸</span><span>🌳</span><span>🐟</span></div>
+<p class="mut" style="margin-top:24px">Ciências · baseado no livro, páginas 142 e 143. Use as setas ou deslize.</p>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>Exótica ou invasora?</h2>
+<p>Plantas, animais e microrganismos vivem em ecossistemas onde evoluíram. Quando chegam a um lugar onde não existiam antes, mudam de categoria.</p>
+<div class="grid">
+<div class="card k"><div class="em">🌍</div><h3>Espécie exótica</h3><p>Foi introduzida em um ecossistema do qual não faz parte originalmente.</p></div>
+<div class="card r"><div class="em">⚠️</div><h3>Espécie exótica invasora</h3><p>Além de exótica, se alastra e coloca em risco a sobrevivência das espécies nativas.</p></div>
+</div>
+<div class="card"><b>Importante:</b> toda invasora é exótica, mas nem toda exótica é invasora.</div>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>Como elas viajam?</h2>
+<p>O mundo globalizado facilita o trânsito de pessoas e mercadorias, e as espécies pegam carona.</p>
+<div class="grid">
+<div class="card"><div class="em">🚢</div><h3>Navios</h3><p>Na água de lastro, que carrega larvas e organismos de um porto a outro.</p></div>
+<div class="card"><div class="em">✈️</div><h3>Viajantes</h3><p>Em bagagens, frutas, sementes e animais levados de outros países.</p></div>
+<div class="card"><div class="em">🌾</div><h3>Agricultura e comércio</h3><p>Plantas e criações trazidas de propósito para produzir alimento ou renda.</p></div>
+<div class="card"><div class="em">🐠</div><h3>Animais de estimação</h3><p>Aquários e pets soltos na natureza quando o dono desiste de cuidar.</p></div>
+</div>
+<p class="mut">As espécies podem chegar de forma acidental ou proposital.</p>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>Exemplos do livro</h2>
+<div class="grid">
+<div class="card k"><div class="em">🥭</div><h3>Mangueira</h3><p><i>Mangifera indica</i>, originária da Índia. É exótica, mas <b>não é invasora</b>, pois convive bem com o ecossistema.</p></div>
+<div class="card r"><div class="em">🐟</div><h3>Tucunaré e tambaqui</h3><p><i>Cichla</i> sp. e <i>Colossoma macropomum</i> são da bacia Amazônica. Foram introduzidos no Pantanal e ameaçam a biodiversidade dos rios de lá.</p></div>
+</div>
+<div class="card"><b>Pergunta para a turma:</b> o tucunaré é brasileiro. Então por que ele é exótico no Pantanal? <span class="mut">(Porque “exótico” depende do lugar, não do país.)</span></div>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>Caso real: o caramujo-gigante-africano 🐌</h2>
+<p><i>Achatina fulica</i> é originário do leste e do nordeste da África.</p>
+<div class="tl">
+<div><b>Década de 1980.</b> Chega ao Brasil com a proposta de substituir o escargot na culinária.</div>
+<div><b>O plano falha.</b> O molusco não teve aceitação no mercado gastronômico.</div>
+<div><b>Abandono.</b> Os criadores soltaram os animais e o caramujo invadiu diversos ambientes.</div>
+<div><b>Hoje.</b> Reproduz rápido, põe muitos ovos e quase não tem predadores naturais. É praga agrícola e vetor da angiostrongilíase, doença que afeta os sistemas nervoso e digestório humanos.</div>
+</div>
+<p class="mut"><i>Escargot</i> é a palavra francesa para caracol, usada para certos caramujos apreciados como alimento.</p>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>Simulação: uma invasão em 12 segundos</h2>
+<p>Este é um ecossistema com 96 áreas. Introduza uma espécie invasora e veja o que acontece com as nativas.</p>
+<div class="sim" id="sim"></div>
+<div class="meter"><i id="mt"></i></div>
+<p id="st" class="mut" style="margin-top:8px">Nativas: 100%</p>
+<button class="pri" id="go">Introduzir invasora</button> <button id="rs">Reiniciar</button>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>Atividade: quatro invasoras do Brasil</h2>
+<p>Toque em uma carta para ver nome popular, origem, como chegou e os danos.</p>
+<div class="grid">
+<button class="card fc"><span class="f"><span class="em">🦟</span><b>Aedes aegypti</b><small>Toque para virar</small></span><span class="b"><b>Mosquito-da-dengue</b><br>Origem: África.<br>Chegou: provavelmente em navios, no período colonial.<br>Danos: transmite dengue, zika e chikungunya.</span></button>
+<button class="card fc"><span class="f"><span class="em">🌳</span><b>Prosopis juliflora</b><small>Toque para virar</small></span><span class="b"><b>Algaroba</b><br>Origem: Andes.<br>Chegou: plantada no Nordeste para dar sombra e alimentar o gado.<br>Danos: domina áreas da caatinga e sufoca plantas nativas.</span></button>
+<button class="card fc"><span class="f"><span class="em">🐸</span><b>Lithobates catesbeianus</b><small>Toque para virar</small></span><span class="b"><b>Rã-touro</b><br>Origem: América do Norte.<br>Chegou: trazida para criação comercial e escapou.<br>Danos: devora anfíbios nativos e espalha doenças.</span></button>
+<button class="card fc"><span class="f"><span class="em">🐚</span><b>Limnoperna fortunei</b><small>Toque para virar</small></span><span class="b"><b>Mexilhão-dourado</b><br>Origem: Ásia.<br>Chegou: na água de lastro de navios.<br>Danos: entope tubulações de usinas e muda a vida dos rios.</span></button>
+</div>
+<p class="mut">Os detalhes destas quatro cartas vêm de pesquisa geral. Confira nas suas fontes antes de apresentar.</p>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>O que podemos fazer?</h2>
+<div class="grid">
+<div class="card k"><h3>🚫 Nunca soltar animais</h3><p>Pets, peixes de aquário e caramujos não devem ir para a natureza.</p></div>
+<div class="card k"><h3>🌱 Preferir plantas nativas</h3><p>Em jardins e arborização, escolha espécies da região.</p></div>
+<div class="card k"><h3>🚢 Tratar a água de lastro</h3><p>Navios podem trocar ou tratar a água antes de entrar em um porto.</p></div>
+<div class="card k"><h3>📢 Informar e denunciar</h3><p>Avise órgãos ambientais ao encontrar uma possível invasora.</p></div>
+</div>
+<div class="card"><b>Pergunta final:</b> você já viu alguma espécie exótica perto da sua casa ou escola?</div>
+</div></section>
+
+<section class="s"><div class="w">
+<h2>Quiz</h2>
+<p id="qn" class="mut"></p>
+<h3 id="qq" style="font-size:1.35rem"></h3>
+<div id="qo"></div>
+<p id="qe" class="ex"></p>
+<button class="pri" id="qx" style="display:none">Próxima</button>
+</div></section>
+
+</main>
+<nav><button id="pv">Anterior</button><span id="ct"></span><button class="pri" id="nx">Próximo</button></nav>
+
+<script>
+var S=[].slice.call(document.querySelectorAll('.s')),n=0,$=function(i){return document.getElementById(i)};
+function show(i){n=Math.max(0,Math.min(S.length-1,i));S.forEach(function(s,k){s.classList.toggle('on',k===n)});S[n].scrollTop=0;
+$('pg').style.width=((n+1)/S.length*100)+'%';$('ct').textContent=(n+1)+' / '+S.length;$('pv').disabled=n===0;$('nx').disabled=n===S.length-1}
+$('pv').onclick=function(){show(n-1)};$('nx').onclick=function(){show(n+1)};
+document.onkeydown=function(e){if(e.key==='ArrowRight')show(n+1);if(e.key==='ArrowLeft')show(n-1)};
+var tx=0;document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>80&&!e.target.closest('button'))show(n+(d<0?1:-1))},{passive:true});
+show(0);
+[].forEach.call(document.querySelectorAll('.fc'),function(b){b.onclick=function(){b.classList.toggle('on')}});
+
+/* simulação */
+var C=12,R=8,cells=[],g=$('sim'),tm=null;
+for(var i=0;i<C*R;i++){var c=document.createElement('i');g.appendChild(c);cells.push(0)}
+function draw(){var k=0;[].forEach.call(g.children,function(c,i){c.className=cells[i]?'x':'';k+=cells[i]});
+var p=Math.round((1-k/cells.length)*100);$('mt').style.width=p+'%';
+$('st').textContent='Nativas: '+p+'%'+(p===0?'. O ecossistema foi dominado.':'')}
+function tick(){var nx=cells.slice();cells.forEach(function(v,i){if(!v)return;var x=i%C,y=(i/C)|0;
+[[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){var a=x+d[0],b=y+d[1];if(a>=0&&a<C&&b>=0&&b<R&&Math.random()<.35)nx[b*C+a]=1})});
+cells=nx;draw();if(cells.indexOf(0)<0){clearInterval(tm);tm=null}}
+$('go').onclick=function(){if(tm)return;if(cells.indexOf(1)<0)cells[Math.floor(Math.random()*cells.length)]=1;draw();tm=setInterval(tick,600)};
+$('rs').onclick=function(){clearInterval(tm);tm=null;cells=cells.map(function(){return 0});draw()};
+draw();
+
+/* quiz */
+var Q=[
+["O que são espécies exóticas?",["Espécies que só vivem em zoológicos","Espécies introduzidas em um ecossistema do qual não fazem parte originalmente","Espécies em extinção","Espécies muito raras"],1,"Exóticas são as que foram levadas para fora do seu ecossistema de origem."],
+["O que torna uma espécie exótica “invasora”?",["Ela é grande","Ela veio de outro país","Ela se alastra e ameaça a sobrevivência das nativas","Ela é bonita"],2,"A invasora se espalha e coloca as espécies nativas em risco."],
+["De onde é originária a mangueira?",["Índia","Amazônia","África","Pantanal"],0,"A mangueira é da Índia e não é considerada invasora."],
+["Por que o caramujo-gigante-africano foi trazido ao Brasil?",["Para limpar rios","Para substituir o escargot na culinária","Para combater o mosquito da dengue","Para enfeitar jardins"],1,"A ideia era uma alternativa ao escargot, mas o mercado não aceitou."],
+["Tucunaré e tambaqui são da Amazônia. Por que são exóticos no Pantanal?",["Foram introduzidos fora de sua região de origem","Vêm de outro continente","São animais marinhos","Não são exóticos"],0,"Exótico é quem vive fora de seu local de origem, mesmo dentro do mesmo país."],
+["Que doença o caramujo-gigante-africano pode transmitir?",["Dengue","Angiostrongilíase","Gripe","Malária"],1,"Ele é vetor da angiostrongilíase, que afeta os sistemas nervoso e digestório."],
+["Como o mexilhão-dourado chegou à América do Sul?",["Nadando pelo oceano","Na água de lastro de navios","Em aviões","Trazido por aves"],1,"A água de lastro dos navios transporta organismos de um porto a outro."]
+],qi=0,sc=0;
+function ask(){var q=Q[qi];$('qn').textContent='Pergunta '+(qi+1)+' de '+Q.length;$('qq').textContent=q[0];$('qe').textContent='';$('qx').style.display='none';
+var o=$('qo');o.innerHTML='';q[1].forEach(function(t,i){var b=document.createElement('button');b.className='opt';b.textContent=String.fromCharCode(97+i)+') '+t;
+b.onclick=function(){var bs=o.children;for(var k=0;k<bs.length;k++){bs[k].disabled=true}
+if(i===q[2]){sc++;b.className='opt ok';$('qe').textContent='Correto! '+q[3]}else{b.className='opt no';bs[q[2]].className='opt ok';$('qe').textContent='Quase. '+q[3]}
+$('qx').textContent=qi<Q.length-1?'Próxima':'Ver resultado';$('qx').style.display='inline-block'};o.appendChild(b)})}
+$('qx').onclick=function(){qi++;if(qi<Q.length)return ask();
+$('qn').textContent='Fim do quiz';$('qq').textContent='Você acertou '+sc+' de '+Q.length+'.';
+$('qo').innerHTML='<div class="card k"><div class="em">'+(sc>=6?'🏆':sc>=4?'🌿':'📚')+'</div><p>'+(sc>=6?'Excelente! Você já é especialista em espécies invasoras.':sc>=4?'Muito bom! Revise os casos reais e tente de novo.':'Vale rever os slides e tentar novamente.')+'</p></div>';
+$('qe').textContent='Obrigado pela atenção!';this.textContent='Jogar de novo';this.onclick=function(){qi=0;sc=0;this.onclick=null;location.reload()}};
+ask();
+</script>
+</body>
+</html>
